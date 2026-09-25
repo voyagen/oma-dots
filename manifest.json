@@ -4,6 +4,7 @@
   "name": "Workspace Dots",
   "version": "2.0.0",
   "author": "Voyagen",
+  "license": "MIT",
   "description": "Animated dot and pill workspace indicators for the Omarchy bar",
   "kinds": ["bar-widget"],
   "entryPoints": {

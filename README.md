@@ -2,7 +2,9 @@
 
 An animated Quickshell bar widget for Omarchy Quattro. The focused workspace grows into a pill while the previous one shrinks; the dots move together as the strip changes shape.
 
-![Workspace Dots preview: the third workspace is focused](preview.png)
+![Workspace Dots preview: enlarged bar widget with workspace two, then three, focused](preview.png)
+
+The marketplace preview illustrates the widget at 3.5× scale. Edit `preview.svg` and regenerate `preview.png` with `rsvg-convert -w 1600 -h 900 -o preview.png preview.svg`.
 
 ## Requirements
 
@@ -64,3 +66,7 @@ If you used a different widget, enable or place that widget by its own ID instea
 ## Compatibility
 
 The manifest ID and QML `moduleName` are both `voyagen.oma-dots`. The widget shows numbered Hyprland workspaces 1–10. Special workspaces and workspace IDs above 10 have no highlighted dot. Each monitor's bar shows the same global focused workspace, matching Omarchy's built-in workspace widget. Clicking a dot uses Omarchy's `hl.dsp.focus` dispatcher, which must remain available in a customized Hyprland configuration. A future Omarchy update that changes its Quickshell widget API or Hyprland dispatcher will require an updated plugin. Plugin updates do not automatically incorporate changes to Omarchy's default `shell.json` into an existing user config.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
