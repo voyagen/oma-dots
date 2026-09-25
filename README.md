@@ -23,6 +23,8 @@ omarchy plugin disable omarchy.workspaces
 
 Use the ID of your old indicator instead if it is not `omarchy.workspaces` (for example, `voyagen.workspaces-dots`). Disabling it does not remove its files. The two indicators can also coexist. To move the dots, use `omarchy bar move voyagen.oma-dots --section left --index 1`.
 
+If the dots do not appear after installation, run `omarchy plugin list` to confirm `voyagen.oma-dots` is enabled, then run `omarchy restart shell`. Plugin discovery can leave the running bar stale; restarting it restored the dots without changing the widget. `omarchy plugin validate .` checks the plugin package, not whether the running bar rendered it.
+
 Previous installer versions saved replaced widget settings to `~/.config/omarchy/.voyagen.oma-dots.restore.json`. Native removal does not read that file; restore any custom widget/settings manually if needed.
 
 To update a Git-installed copy:
