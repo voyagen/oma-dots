@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "id": "voyagen.workspaces-dots",
+  "id": "voyagen.oma-dots",
   "name": "Workspace Dots",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "author": "Voyagen",
   "description": "Animated dot and pill workspace indicators for the Omarchy bar",
   "kinds": ["bar-widget"],

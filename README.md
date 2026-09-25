@@ -6,23 +6,38 @@ An animated Quickshell bar widget for Omarchy Quattro. The focused workspace gro
 
 ## Requirements
 
-- Omarchy Quattro with the Quickshell plugin bar
-- No external dependencies or privileged setup
+- Omarchy Quattro with its Quickshell plugin bar and a running `omarchy-shell` session; this is not a Waybar module.
+- `git`, `jq`, and `hyprctl` on `PATH` (checked before installation). No `sudo`, AUR package, extra font, or system-file changes.
 
 ## Install
 
-After publishing this repository, install and enable the plugin, then disable the workspace widget it replaces:
+Clone [voyagen/oma-dots](https://github.com/voyagen/oma-dots):
 
 ```sh
-omarchy plugin add https://github.com/voyagen/oma-dots.git --enable
-omarchy plugin disable omarchy.workspaces
+git clone https://github.com/voyagen/oma-dots.git
+cd oma-dots
+./install.sh
 ```
 
-If you use another workspace widget, disable its ID instead of `omarchy.workspaces`. The dots default to the left section; to move them back there later:
+Confirm the new dots render and can focus a workspace **before** removing the old indicator. Omarchy's plugin list reports layout membership, not whether asynchronous QML loading succeeded. Then run:
 
 ```sh
-omarchy bar move voyagen.workspaces-dots --section left
+./install.sh --replace omarchy.workspaces
 ```
+
+Replace `omarchy.workspaces` with the **ID currently present** in your `~/.config/omarchy/shell.json` bar layout if you use a different workspace widget, including a custom `type: "qml"` or `type: "command"` entry. The installer saves that complete entry and its position before disabling it. It refuses an absent or duplicated ID, a changed layout, and an existing plugin checkout with a different manifest. To keep both indicators, omit the second step; no prior widget will be restored on uninstall.
+
+If you already installed the earlier `voyagen.workspaces-dots` plugin, use `./install.sh --replace voyagen.workspaces-dots` while that widget is still present in the bar. This keeps its files intact for rollback; `./uninstall.sh` restores its old ID and settings. Do not remove the old directory until you no longer need that rollback.
+
+Installation uses Omarchy's Git-backed `plugin add` command, waits for asynchronous discovery, and only then enables the new widget. Re-running `./install.sh` leaves existing widget files and bar placement unchanged. The installer writes restore state to `~/.config/omarchy/.voyagen.oma-dots.restore.json`, and backs up an existing `shell.json` before replacing a widget. If replacement is interrupted after that state is saved, run `./uninstall.sh` to recover. For a checkout not yet published upstream, use `./install.sh --source "$PWD"` to install its committed Git revision, then run the same `--replace` step after verifying the bar.
+
+To update an installed Git checkout:
+
+```sh
+./install.sh --update
+```
+
+This refuses local changes rather than overwriting them. On Omarchy versions without the Quickshell plugin commands, installation fails without altering system files. Omarchy itself uses `$HOME/.config/omarchy/` for shell configuration; a different `XDG_CONFIG_HOME` does not relocate that directory.
 
 ## Usage
 
@@ -33,25 +48,19 @@ Click a dot to focus its workspace. The active indicator is a 16 px pill; inacti
 ## Validate
 
 ```sh
-omarchy plugin validate ~/.config/omarchy/plugins/voyagen.workspaces-dots
+omarchy plugin validate .
 ```
-
-For a checkout of this repository, run `omarchy plugin validate .` from its root. To install that checkout locally instead of using `omarchy plugin add`:
-
-```sh
-mkdir -p ~/.config/omarchy/plugins/voyagen.workspaces-dots
-install -m 644 manifest.json Workspaces.qml ~/.config/omarchy/plugins/voyagen.workspaces-dots/
-omarchy-shell shell rescanPlugins
-omarchy plugin enable voyagen.workspaces-dots --section left
-```
-
-Plugin code normally hot-reloads when saved. If an update does not appear, run `omarchy restart shell`.
 
 ## Remove
 
+From the checkout:
+
 ```sh
-omarchy plugin remove voyagen.workspaces-dots --yes
-omarchy plugin enable omarchy.workspaces --section left
+./uninstall.sh
 ```
 
-If you previously used a different workspace widget, enable its ID instead. Removing a manually installed plugin backs up its directory.
+It refuses to discard local changes in a Git-managed plugin, removes the plugin through Omarchy, then restores the recorded previous entry while preserving unrelated bar changes. If the previous entry was re-added with different content, it refuses to overwrite that entry. If the plugin was installed outside this installer, there is no restore state: removal leaves the rest of the bar alone; restore your previous widget from your own backup.
+
+## Compatibility
+
+The manifest ID and QML `moduleName` are both `voyagen.oma-dots`. The widget shows numbered Hyprland workspaces 1–10. Special workspaces and workspace IDs above 10 have no highlighted dot. Each monitor's bar shows the same global focused workspace, matching Omarchy's built-in workspace widget. Clicking a dot uses Omarchy's `hl.dsp.focus` dispatcher, which must remain available in a customized Hyprland configuration. A future Omarchy update that changes its Quickshell widget API or Hyprland dispatcher will require an updated plugin; Git-backed installs can receive that update with `./install.sh --update`. Plugin updates do not automatically incorporate changes to Omarchy's default `shell.json` into an existing user config.

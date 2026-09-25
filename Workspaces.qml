@@ -5,7 +5,7 @@ import qs.Ui
 
 BarWidget {
   id: root
-  moduleName: "voyagen.workspaces-dots"
+  moduleName: "voyagen.oma-dots"
 
   function workspaceCount() {
     var focused = Hyprland.focusedWorkspace
